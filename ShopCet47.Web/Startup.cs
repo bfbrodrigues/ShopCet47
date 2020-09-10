@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopCet47.Web.Data;
+using ShopCet47.Web.Data.Repositories;
 
 namespace ShopCet47.Web
 {
@@ -32,7 +33,13 @@ namespace ShopCet47.Web
           });
 
 
+            //Vou usar a minha classe SeedDb para alimentar as tabelas da BD
+            services.AddTransient<SeedDb>();
+
+            services.AddScoped<IRepository, Repository>();
+
             services.Configure<CookiePolicyOptions>(options =>
+
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
