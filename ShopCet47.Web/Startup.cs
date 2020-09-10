@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopCet47.Web.Data;
+using ShopCet47.Web.Data.Entities;
 using ShopCet47.Web.Data.Repositories;
 
 namespace ShopCet47.Web
@@ -27,6 +29,22 @@ namespace ShopCet47.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+            //Configurar a autenticação
+            services.AddIdentity<User, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequiredLength = 6;
+            })
+            .AddEntityFrameworkStores<DataContext>();
+
+
             services.AddDbContext<DataContext>(cfg => //cfg é uma variavel qualquer que criamos para definir um objeto do tipo DataContext
           {
               cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")); //Estamos a informar que a nossa variavel DataContext vai utilizar o SQL Server
@@ -50,6 +68,11 @@ namespace ShopCet47.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
+        private void AddEntityFrameworkStores<T>()
+        {
+            throw new NotImplementedException();
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -65,6 +88,7 @@ namespace ShopCet47.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

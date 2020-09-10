@@ -19,6 +19,5 @@ namespace ShopCet47.Web.Data.Repositories
         Task<bool> SaveAllAsync();
 
         void UpdateProduct(Product product);
-        void GetProduct(Product product);
     }
 }

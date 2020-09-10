@@ -60,9 +60,8 @@ namespace ShopCet47.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.GetProduct(product);
+                _repository.GetProduct(product.Id);
 
-                return RedirectToAction(nameof(Index));
                 await _repository.SaveAllAsync();
                 return RedirectToAction(nameof(Index));
             }
