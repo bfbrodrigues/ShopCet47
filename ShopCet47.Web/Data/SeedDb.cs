@@ -1,6 +1,7 @@
 ﻿   using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ShopCet47.Web.Data.Entities;
+using ShopCet47.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,15 @@ namespace ShopCet47.Web.Data
     {
 
         private readonly DataContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserHelper _userHelper;
         private Random _random;
 
 
 
-        public SeedDb(DataContext context, UserManager<User> userManager)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
-            _userManager = userManager;
+            _userHelper = userHelper;
             _random = new Random();
         }
 
@@ -29,7 +30,7 @@ namespace ShopCet47.Web.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
-            var user = await _userManager.FindByEmailAsync("bruno.baptista.rodrigues@formandos.cinel.pt");
+            var user = await _userHelper.GetUserByEmailAsync("bruno.baptista.rodrigues@formandos.cinel.pt");
             if (user == null)
             {
                 user = new User
@@ -40,7 +41,7 @@ namespace ShopCet47.Web.Data
                     UserName = "bruno.baptista.rodrigues@formandos.cinel.pt",
                 };
 
-                var result = await _userManager.CreateAsync(user, "123456");
+                var result = await _userHelper.AddUserAsync(user, "123456");
                 if(result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not crate the user in seeder");

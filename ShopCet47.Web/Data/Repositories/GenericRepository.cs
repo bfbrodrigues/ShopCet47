@@ -54,10 +54,12 @@ namespace ShopCet47.Web.Data.Repositories
             return await _context.Set<T>().AnyAsync(e => e.Id == Id);
         }
 
-        private Task SaveAllAsync()
+        public async Task<bool> SaveAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync() > 0;
         }
+
+
 
 
     }
