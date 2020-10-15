@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using ShopCet47.Web.Models;
 
 namespace ShopCet47.Web.Controllers
 {
+    //[Authorize] - Só permite a quem estiver logado ver os produtos
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -51,6 +53,7 @@ namespace ShopCet47.Web.Controllers
             return View(product);
         }
 
+        [Authorize]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -89,8 +92,7 @@ namespace ShopCet47.Web.Controllers
 
                 var product = this.ToProduct(view, path);
 
-                //TODO: Mudar para o user que depois tiver logado
-                product.User = await _userHelper.GetUserByEmailAsync("bruno.baptista.rodrigues@formandos.cinel.pt");
+                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _productRepository.CreateAsync(product);
                 return RedirectToAction(nameof(Index));
             }
@@ -113,6 +115,7 @@ namespace ShopCet47.Web.Controllers
             };
         }
 
+        [Authorize]
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -190,9 +193,7 @@ namespace ShopCet47.Web.Controllers
                     }
                 var product = this.ToProduct(view, path);           
 
-
-                //TODO: Mudar para o user que depois tiver logado
-                view.User = await _userHelper.GetUserByEmailAsync("bruno.baptista.rodrigues@formandos.cinel.pt");
+                view.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _productRepository.UpdateAsync(product);
             }
             catch (DbUpdateConcurrencyException)
@@ -211,6 +212,7 @@ namespace ShopCet47.Web.Controllers
         return View(view);
     }
 
+    [Authorize]
     // GET: Products/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {

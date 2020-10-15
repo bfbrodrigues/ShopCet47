@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ShopCet47.Web.Data.Entities;
+using ShopCet47.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,5 +16,11 @@ namespace ShopCet47.Web.Helpers
 
         Task<IdentityResult> AddUserAsync(User user, string password);
 
+
+        //A partir daqui utiliza-se a class Identity - Responsavel pela autenticação do login
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+
+
+        Task LogoutAsync();
     }
 }
