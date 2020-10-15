@@ -26,7 +26,10 @@ namespace ShopCet47.Web.Helpers
             return await _userManager.CreateAsync(user, password);
         }
 
-
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string OldPassword, string NewPassword)
+        {
+            return await this._userManager.ChangeEmailAsync(user, OldPassword, NewPassword);
+        }
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
@@ -44,6 +47,11 @@ namespace ShopCet47.Web.Helpers
         public async Task LogoutAsync()
         {
             await this._signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await this._userManager.UpdateAsync(user);
         }
     }
 }
