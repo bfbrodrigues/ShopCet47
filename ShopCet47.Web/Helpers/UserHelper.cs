@@ -38,7 +38,7 @@ namespace ShopCet47.Web.Helpers
 
         public async Task<IdentityResult> ChangePasswordAsync(User user, string OldPassword, string NewPassword)
         {
-            return await this._userManager.ChangeEmailAsync(user, OldPassword, NewPassword);
+            return await this._userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
         }
 
         public async Task CheckRoleAsync(string roleName)
