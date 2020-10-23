@@ -30,6 +30,9 @@ namespace ShopCet47.Web.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
+            await this._userHelper.CheckRoleAsync("Admin");
+            await this._userHelper.CheckRoleAsync("Customer");
+
             var user = await _userHelper.GetUserByEmailAsync("bruno.baptista.rodrigues@formandos.cinel.pt");
             if (user == null)
             {
@@ -47,7 +50,13 @@ namespace ShopCet47.Web.Data
                     throw new InvalidOperationException("Could not crate the user in seeder");
                 }
 
+                await this._userHelper.AddUserToRoleAsync(user, "Admin");
+            }
 
+            var isRole = await this._userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isRole)
+            {
+                await this._userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
             if(!_context.Products.Any())

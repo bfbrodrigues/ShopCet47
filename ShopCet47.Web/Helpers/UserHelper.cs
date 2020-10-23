@@ -13,11 +13,16 @@ namespace ShopCet47.Web.Helpers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserHelper(UserManager<User> UserManager, SignInManager<User> SignInManager)
+        public UserHelper(UserManager<User> UserManager, 
+            SignInManager<User> SignInManager, 
+            RoleManager<IdentityRole> RoleManager)
         {
             _userManager = UserManager;
             _signInManager = SignInManager;
+            _roleManager = RoleManager;
+
         }
 
 
@@ -26,14 +31,38 @@ namespace ShopCet47.Web.Helpers
             return await _userManager.CreateAsync(user, password);
         }
 
+        public async Task AddUserToRoleAsync(User user, string roleName)
+        {
+            await this._userManager.AddToRoleAsync(user, roleName);
+        }
+
         public async Task<IdentityResult> ChangePasswordAsync(User user, string OldPassword, string NewPassword)
         {
             return await this._userManager.ChangeEmailAsync(user, OldPassword, NewPassword);
         }
 
+        public async Task CheckRoleAsync(string roleName)
+        {
+            var roleExists = await this._roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                await this._roleManager.CreateAsync(new IdentityRole
+                {
+                    Name = roleName
+                });
+            }
+
+            
+        }
+
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<bool> IsUserInRoleAsync(User user, string roleName)
+        {
+            return await this._userManager.IsInRoleAsync(user, "Admin");
         }
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)

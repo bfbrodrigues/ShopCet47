@@ -174,7 +174,7 @@ namespace ShopCet47.Web.Controllers
             if (this.ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-                if (user != null)
+                if (user != null)   
                 {
                     var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
@@ -188,7 +188,7 @@ namespace ShopCet47.Web.Controllers
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User no found.");
+                    this.ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
 
